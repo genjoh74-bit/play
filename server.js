@@ -1,10 +1,12 @@
 import express from 'express';
-import { Innertube } from 'youtubei.js';
+import pkg from 'youtubei.js';
+
+const { Innertube } = pkg;
 
 const app = express();
-const port = process.env.PORT || 3000; // Render injects PORT automatically
+const port = process.env.PORT || 3000;
 
-// Utility: create a single Innertube client once
+// Initialize YouTube client once
 let yt;
 (async () => {
   try {
@@ -74,7 +76,6 @@ app.get('/download/video/:id', async (req, res) => {
   }
 });
 
-// ✅ Start server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
