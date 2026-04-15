@@ -6,22 +6,27 @@ const { Innertube } = pkg;
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Initialize YouTube client once
 let yt;
+
+// Initialize before starting server
 (async () => {
   try {
     yt = await Innertube.create();
     console.log("YouTube client initialized");
+
+    // Only start server once client is ready
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`);
+    });
   } catch (err) {
     console.error("Failed to initialize YouTube client:", err);
+    process.exit(1); // crash if init fails
   }
 })();
 
 // 🔎 Search endpoint
 app.get('/search', async (req, res) => {
   try {
-    if (!yt) return res.status(500).json({ error: "YouTube client not ready" });
-
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: "Missing query parameter ?q=" });
 
@@ -47,8 +52,6 @@ app.get('/search', async (req, res) => {
 // 🎵 Download audio
 app.get('/download/audio/:id', async (req, res) => {
   try {
-    if (!yt) return res.status(500).json({ error: "YouTube client not ready" });
-
     const videoId = req.params.id;
     const stream = await yt.download(videoId, { type: 'audio' });
 
@@ -63,8 +66,6 @@ app.get('/download/audio/:id', async (req, res) => {
 // 🎬 Download video
 app.get('/download/video/:id', async (req, res) => {
   try {
-    if (!yt) return res.status(500).json({ error: "YouTube client not ready" });
-
     const videoId = req.params.id;
     const stream = await yt.download(videoId, { type: 'video' });
 
@@ -74,8 +75,4 @@ app.get('/download/video/:id', async (req, res) => {
     console.error("Video download error:", err);
     res.status(500).json({ error: "Failed to download video" });
   }
-});
-
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
 });
