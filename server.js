@@ -1,7 +1,7 @@
 import express from 'express';
-import youtubei from 'youtubei.js';   // import the default
+import youtubei from 'youtubei.js';   // default import
 
-const { Innertube } = youtubei;       // destructure Innertube from default
+const Innertube = youtubei.Innertube; // access Innertube from default
 
 const app = express();
 const port = process.env.PORT || 3000;
