@@ -14,13 +14,12 @@ let yt;
     yt = await Innertube.create();
     console.log("YouTube client initialized");
 
-    // Only start server once client is ready
     app.listen(port, () => {
       console.log(`Server running on http://localhost:${port}`);
     });
   } catch (err) {
     console.error("Failed to initialize YouTube client:", err);
-    process.exit(1); // crash if init fails
+    process.exit(1);
   }
 })();
 
@@ -38,10 +37,12 @@ app.get('/search', async (req, res) => {
     const first = results.videos[0];
     res.json({
       title: first.title.text,
-      artist: first.author.name,
+      creator: first.author.name,
       cover: first.best_thumbnail.url,
       videoId: first.id,
-      url: `https://www.youtube.com/watch?v=${first.id}`
+      url: `https://www.youtube.com/watch?v=${first.id}`,
+      download_audio: `${req.protocol}://${req.get('host')}/download/audio/${first.id}`,
+      download_video: `${req.protocol}://${req.get('host')}/download/video/${first.id}`
     });
   } catch (err) {
     console.error("Search error:", err);
@@ -49,7 +50,7 @@ app.get('/search', async (req, res) => {
   }
 });
 
-// 🎵 Download audio
+// 🎵 Download audio (streams file)
 app.get('/download/audio/:id', async (req, res) => {
   try {
     const videoId = req.params.id;
@@ -63,7 +64,7 @@ app.get('/download/audio/:id', async (req, res) => {
   }
 });
 
-// 🎬 Download video
+// 🎬 Download video (streams file)
 app.get('/download/video/:id', async (req, res) => {
   try {
     const videoId = req.params.id;
