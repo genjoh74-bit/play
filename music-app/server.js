@@ -1,11 +1,8 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import { Innertube } from 'youtubei.js';
-import fs from 'fs';
 
-dotenv.config();
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000; // Render injects PORT automatically
 
 // 🔎 Search endpoint
 app.get('/search', async (req, res) => {
