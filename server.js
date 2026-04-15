@@ -1,7 +1,8 @@
 import express from 'express';
 import youtubei from 'youtubei.js';   // default import
 
-const Innertube = youtubei.Innertube; // access Innertube from default
+// Grab Innertube safely from the default export
+const Innertube = youtubei?.Innertube;
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -11,6 +12,10 @@ let yt;
 // Initialize before starting server
 (async () => {
   try {
+    if (!Innertube) {
+      throw new Error("Innertube not found in youtubei.js export");
+    }
+
     yt = await Innertube.create();
     console.log("YouTube client initialized");
 
