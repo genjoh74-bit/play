@@ -1,7 +1,7 @@
 import express from 'express';
-import pkg from 'youtubei.js';
+import youtubei from 'youtubei.js';   // import the default
 
-const { Innertube } = pkg;
+const { Innertube } = youtubei;       // destructure Innertube from default
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -50,7 +50,7 @@ app.get('/search', async (req, res) => {
   }
 });
 
-// 🎵 Download audio (streams file)
+// 🎵 Download audio
 app.get('/download/audio/:id', async (req, res) => {
   try {
     const videoId = req.params.id;
@@ -64,7 +64,7 @@ app.get('/download/audio/:id', async (req, res) => {
   }
 });
 
-// 🎬 Download video (streams file)
+// 🎬 Download video
 app.get('/download/video/:id', async (req, res) => {
   try {
     const videoId = req.params.id;
